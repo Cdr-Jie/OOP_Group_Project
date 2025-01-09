@@ -76,7 +76,8 @@ public class Main_Menu extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae){
         if (ae.getSource() == inventory){
             /* Enter inventory interface */
-            JOptionPane.showMessageDialog(this, "Pressed");
+            this.dispose();
+            new Inventory_Menu();
         }
         else if (ae.getSource() == exit){
             /* Goes back to login */
