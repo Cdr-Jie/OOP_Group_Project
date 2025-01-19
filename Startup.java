@@ -159,11 +159,7 @@ public class Startup{
                 });
             }
         });
-        /* Input reception goes here */
-
-        // while(scan.hasNextLine()){
-        //     //compare inputed username and password with the UserList.txt file
-        // }    
+        
         scan.close();
     } catch (FileNotFoundException e) {
         System.out.println("An error occurred.");

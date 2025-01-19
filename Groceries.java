@@ -81,6 +81,11 @@ public class Groceries {
         });
         JButton cancelButton = new JButton("Cancel");
         cancelButton.setBounds(80,280,150,40);
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae){
+                editorFrame.dispose();
+            }
+        });
         editorFrame.add(nameLabel);
         editorFrame.add(nameTextField);
         editorFrame.add(quantLabel);
@@ -100,7 +105,7 @@ public class Groceries {
     void writeToFile(String filename){
         try{
             FileWriter fw = new FileWriter(filename,true);
-            fw.write("\n" + item_name + "\n" + inventory_date + "\n" + quantity + "\n" + price + "\n" + "-");
+            fw.write(item_name + "," + inventory_date + "," + quantity + "," + price + "," + "-\n");
             fw.close();
         }catch(IOException e){
             System.out.println("An error occurred.");

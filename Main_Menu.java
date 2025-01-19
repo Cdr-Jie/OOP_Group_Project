@@ -86,6 +86,8 @@ public class Main_Menu extends JFrame implements ActionListener{
         }
         else if (ae.getSource() == cashier){
             /* Enter cashier interface */
+            this.dispose();
+            new Cashier();
         }
     }
 }

@@ -10,9 +10,11 @@ import java.util.List;
 public class Inventory_Menu extends JFrame implements ActionListener{
     JButton add_item = new JButton("Add Item");
     JButton edit_item = new JButton("Edit Item");
-    JButton delete_item;
+    JButton delete_item = new JButton("Delete Item");
     JButton search;
+    JButton backButton = new JButton("Back");
     JTextField search_field;
+    JTextArea console_field = new JTextArea();
 
     List<List<String>> data = new ArrayList<List<String>>();  
 
@@ -28,12 +30,20 @@ public class Inventory_Menu extends JFrame implements ActionListener{
         this.setLayout(null);
     
         add_item.addActionListener(this);
-        add_item.setBounds(1100, 40, 100, 30);
+        add_item.setBounds(1050, 40, 150, 45);
         this.add(add_item);
 
         edit_item.addActionListener(this);
-        edit_item.setBounds(1100,100,100,30);
+        edit_item.setBounds(1050,100,150,45);
         this.add(edit_item);
+
+        delete_item.addActionListener(this);
+        delete_item.setBounds(1050,160,150,45);
+        this.add(delete_item);
+
+        backButton.addActionListener(this);
+        backButton.setBounds(1050,400,150,45);
+        this.add(backButton);
 
         List<List<String>> data = new ArrayList<>();
     
@@ -41,8 +51,8 @@ public class Inventory_Menu extends JFrame implements ActionListener{
             Scanner inventory_scanner = new Scanner(new File("Inventory.txt"));
             while (inventory_scanner.hasNextLine()) {
                 List<String> arr = new ArrayList<>();
-                for (int i = 0; i < 5 && inventory_scanner.hasNextLine(); i++) {
-                    arr.add(inventory_scanner.nextLine());
+                for (String x : inventory_scanner.nextLine().split(",")){
+                    arr.add(x);
                 }
                 data.add(arr);
             }
@@ -63,10 +73,17 @@ public class Inventory_Menu extends JFrame implements ActionListener{
         };
         table = new JTable(tableModel);
 
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 40, 1000, 400);
-        this.add(scrollPane);
-    
+        JScrollPane tableScrollPane = new JScrollPane(table);
+        tableScrollPane.setBounds(10, 40, 1000, 400);
+        this.add(tableScrollPane);
+
+        console_field.setForeground(Color.blue);
+        console_field.setText("Inventory view mode\n");
+        JScrollPane consoleScrollPane = new JScrollPane(console_field);
+        consoleScrollPane.setBounds(10,450,1000,200);
+
+        this.add(consoleScrollPane);
+
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
 
@@ -90,6 +107,7 @@ public class Inventory_Menu extends JFrame implements ActionListener{
             }
             String[][] data_arr = new String[data.size()][];
             updateTable();
+            console_field.append("New item \"" + name + "\" has been added\n");
         }
         else if (ae.getSource() == edit_item){
             try{
@@ -105,33 +123,25 @@ public class Inventory_Menu extends JFrame implements ActionListener{
                 int item_index = table.getSelectedRow();
 
                 for (int i = 0; i < item_index; i++) {
-                    for (int j = 0; j < 5; j++){
-                        if (i == 0 && j == 0){
-                            fileWriter.write(fileReader.readLine());
-                        }
-                        else{
-                            fileWriter.write(System.getProperty("line.separator") + fileReader.readLine());
-                        }
-                    }
+                    fileWriter.write(fileReader.readLine() + "\n");
                 }
-                name = fileReader.readLine();
-                inventory_date = fileReader.readLine();
-                quantity = Integer.parseInt(fileReader.readLine());
-                price = Double.parseDouble(fileReader.readLine());
-                expiry_date = fileReader.readLine();
+
+                String[] changing_item = fileReader.readLine().split(",");
+
+                name = changing_item[0];
+                inventory_date = changing_item[1];
+                quantity = Integer.parseInt(changing_item[2]);
+                price = Double.parseDouble(changing_item[3]);
+                expiry_date = changing_item[4];
 
                 if (expiry_date.equals("-")){
                     Groceries item = new Groceries(name, quantity, price, inventory_date);
                     item.openEditorMenu();
                     DecimalFormat df = new DecimalFormat("#.##");
-                    fileWriter.write("\n" + item.getItemName());
-                    fileWriter.write("\n" + item.getInventoryDate());
-                    fileWriter.write("\n" + item.getQuantity());
-                    fileWriter.write("\n" + df.format(item.getPrice()));
-                    fileWriter.write("\n" +"-");
+                    fileWriter.write(item.getItemName() + "," + item.getInventoryDate() + "," + item.getQuantity() + "," + df.format(item.getPrice()) + "," + "-" + "\n");
                     String line;
                     while ((line = fileReader.readLine()) != null) {
-                        fileWriter.write("\n" + line);
+                        fileWriter.write(line + "\n");
                     }
                     fileWriter.close();
                     fileReader.close();
@@ -139,11 +149,25 @@ public class Inventory_Menu extends JFrame implements ActionListener{
                     System.out.println(item);
                     System.out.println(tempfile.renameTo(originalfile));
                     updateTable();
+                    console_field.append("Item \"" + name + "\" has been edited\n");
                 }
                 else{
                     PerishableGoods item = new PerishableGoods(name, quantity, price);
                     /* call perishableGoods.editorMenu() */
+                    item.openEditorMenu();
+                    DecimalFormat df = new DecimalFormat("#.##");
+                    fileWriter.write(item.getItemName() + "," + item.getInventoryDate() + "," + item.getQuantity() + "," + df.format(item.getPrice()) + "," + item.getExpiryDate() + "\n");
+                    String line;
+                    while ((line = fileReader.readLine()) != null) {
+                        fileWriter.write(line + "\n");
+                    }
+                    fileWriter.close();
+                    fileReader.close();
+                    originalfile.delete();
                     System.out.println(item);
+                    System.out.println(tempfile.renameTo(originalfile));
+                    updateTable();
+                    console_field.append("Item \"" + name + "\" has been edited\n");
                 }
             } catch (FileNotFoundException e){
                 System.out.println("Inventory file not found");
@@ -152,18 +176,42 @@ public class Inventory_Menu extends JFrame implements ActionListener{
                 System.out.println("IO error");
                 e.printStackTrace();
             }
-
-            JFrame editor  = new JFrame();
-            JLabel nameLabel, inventory_dateLabel, quantityLabel, expiryLabel, priceLabel;
-            JTextField nameTextField, inventory_dateTextField, quantityTextField, priceTextField;
-            JButton changeButton = new JButton("Change");
-
-            // instatiate another perishable good to store the new item's info
-            changeButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae){
-
+        }
+        else if (ae.getSource() == delete_item){
+            try{
+                File tempfile = new File("tempfile.txt");
+                File originalfile = new File("Inventory.txt");
+                BufferedWriter fileWriter = new BufferedWriter(new FileWriter(tempfile));
+                BufferedReader fileReader = new BufferedReader(new FileReader(originalfile));
+                int item_index = table.getSelectedRow();
+                int i = 0;
+                String line, name = "";
+                while((line = fileReader.readLine()) != null){
+                    if (i != item_index){
+                        fileWriter.write(line + "\n");
+                    }
+                    else{
+                        name = line.split(",")[0];
+                    }
+                    i++;
                 }
-            });
+                fileWriter.close();
+                fileReader.close();
+                originalfile.delete();
+                System.out.println(tempfile.renameTo(originalfile));
+                updateTable();
+                console_field.append("Item \"" + name + "\" has been deleted\n");
+            } catch (FileNotFoundException e){
+                System.out.println("Inventory file not found");
+                e.printStackTrace();
+            } catch (IOException e){
+                System.out.println("IO error");
+                e.printStackTrace();
+            }
+        }
+        else if(ae.getSource() == backButton){
+            this.dispose();
+            new Main_Menu();
         }
     }
 
@@ -173,8 +221,8 @@ public class Inventory_Menu extends JFrame implements ActionListener{
             Scanner file_scanner = new Scanner(new File("Inventory.txt"));
             while (file_scanner.hasNextLine()) {
                 List<String> temp_arr = new ArrayList<>();
-                for (int i = 0; i < 5 && file_scanner.hasNextLine(); i++) {
-                    temp_arr.add(file_scanner.nextLine());
+                for (String x : file_scanner.nextLine().split(",")) {
+                    temp_arr.add(x);
                 }
                 new_data.add(temp_arr);
             }
