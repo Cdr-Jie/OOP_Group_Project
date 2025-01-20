@@ -35,22 +35,22 @@ public class PerishableGoods extends Groceries{
 
         JLabel nameLabel = new JLabel("Item Name:");
         nameLabel.setBounds(X_LABEL,20,120,30);
-        JTextField nameTextField = new JTextField(item_name);
+        JTextField nameTextField = new JTextField(getItemName());
         nameTextField.setBounds(X_FIELD,20,120,30);
 
         JLabel quantLabel = new JLabel("Quantity:");
         quantLabel.setBounds(X_LABEL,70,120,30);
-        JTextField quantTextField = new JTextField(df.format(quantity));
+        JTextField quantTextField = new JTextField(df.format(getQuantity()));
         quantTextField.setBounds(X_FIELD,70,120,30);
 
         JLabel priceLabel = new JLabel("Price:");
         priceLabel.setBounds(X_LABEL,120,120,30);
-        JTextField priceTextField = new JTextField(df.format(price));
+        JTextField priceTextField = new JTextField(df.format(getPrice()));
         priceTextField.setBounds(X_FIELD,120,120,30);
 
         JLabel invLabel = new JLabel("Date entered:");
         invLabel.setBounds(X_LABEL,170,120,30);
-        JLabel invDateLabel = new JLabel(inventory_date);
+        JLabel invDateLabel = new JLabel(getInventoryDate());
         JPanel invDatePanel = new JPanel();
         invDatePanel.add(invDateLabel);
         invDatePanel.setBounds(X_FIELD,170,120,30);
@@ -61,12 +61,12 @@ public class PerishableGoods extends Groceries{
         changeinvDateButton.setBounds(X_FIELD,210,120,20);
         changeinvDateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae){
-                changeInventoryDate();
-                invDateLabel.setText(inventory_date);
+                changeInventoryDate(editorFrame);
+                invDateLabel.setText(getInventoryDate());
             }
         });
 
-        JLabel expLabel = new JLabel("Date entered:");
+        JLabel expLabel = new JLabel("Expiry Date:");
         expLabel.setBounds(X_LABEL,250,120,30);
 
         JLabel expDateLabel = new JLabel(expiry_date);
@@ -89,9 +89,9 @@ public class PerishableGoods extends Groceries{
         doneButton.setBounds(260,350,150,40);
         doneButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae){
-                item_name = nameTextField.getText();
-                quantity = Integer.parseInt(quantTextField.getText());
-                price = Double.parseDouble(priceTextField.getText());
+                changeItemName(nameTextField.getText());
+                changeQuantity(Integer.parseInt(quantTextField.getText()));
+                changePrice(Double.parseDouble(priceTextField.getText()));
                 editorFrame.dispose();
             }
         });
@@ -121,7 +121,7 @@ public class PerishableGoods extends Groceries{
     }
 
     void soldItem(Receipt new_receipt, JFrame parent){
-        if(quantity == 0){
+        if(getQuantity() == 0){
             JOptionPane.showMessageDialog(parent,"Out of stock");
         }
         DecimalFormat df = new DecimalFormat("0.00");
@@ -129,25 +129,24 @@ public class PerishableGoods extends Groceries{
         add_item.setLayout(null);
         add_item.setSize(500,400);
         add_item.setResizable(false);
-        JSpinner quantity_sold = new JSpinner(new SpinnerNumberModel(1,0,quantity,1));
+        JSpinner quantity_sold = new JSpinner(new SpinnerNumberModel(1,0,getQuantity(),1));
         JLabel nameLabel1 = new JLabel("Item: ");
-        JLabel nameLabel2 = new JLabel(item_name, SwingConstants.RIGHT);
+        JLabel nameLabel2 = new JLabel(getItemName(), SwingConstants.RIGHT);
         JLabel quantityLabel = new JLabel("Amount: ");
         JLabel price_per_itemLabel1 = new JLabel("Price per item: ");
-        JLabel price_per_itemLabel2 = new JLabel("RM " + df.format(price));
+        JLabel price_per_itemLabel2 = new JLabel("RM " + df.format(getPrice()));
         JLabel totalLabel1  = new JLabel("Total: ");
-        JLabel totalLabel2  = new JLabel("RM " + df.format(((int)quantity_sold.getValue() * price)));
+        JLabel totalLabel2  = new JLabel("RM " + df.format(((int)quantity_sold.getValue() * getPrice())));
         quantity_sold.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e){
-                totalLabel2.setText("RM "+ df.format(((int)quantity_sold.getValue() * price)));
+                totalLabel2.setText("RM "+ df.format(((int)quantity_sold.getValue() * getPrice())));
             }
         });
 
         JButton add_to_receipt = new JButton("Add to receipt");
         add_to_receipt.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                new_receipt.addItem(item_name, (int)quantity_sold.getValue(), price);
-                new_receipt.showWorking();
+                new_receipt.addItem(getItemName(), (int)quantity_sold.getValue(), getPrice());
                 add_item.dispose();
             }
         });
@@ -186,9 +185,9 @@ public class PerishableGoods extends Groceries{
     }
 
     void changeExpiryDate(){
-        expiryDateChanger expiryDialog = new expiryDateChanger(null);
+        DateChanger expiryDialog = new DateChanger(null, "Expiry");
         expiryDialog.setVisible(true); // Show the dialog modally
-        String selectedDate = expiryDialog.getNewExpiryDate();
+        String selectedDate = expiryDialog.getNewDate();
 
         if (selectedDate != null) {
             expiry_date = selectedDate; // Update the expiry date
@@ -200,7 +199,7 @@ public class PerishableGoods extends Groceries{
         try{
             changeExpiryDate();
             FileWriter fw = new FileWriter(filename,true);
-            fw.write(item_name + "," + inventory_date + "," + quantity + "," + price + "," + expiry_date + "\n");
+            fw.write(getItemName() + "," + getInventoryDate() + "," + getQuantity() + "," + getPrice() + "," + expiry_date + "\n");
             fw.close();
         }catch(IOException e){
             System.out.println("An error occurred.");
@@ -213,7 +212,7 @@ public class PerishableGoods extends Groceries{
     }
 
     public String toString(){
-        return "Item name: " + item_name + "\nDate entered inventory: " + inventory_date + "\nQuantity: " + quantity + "\nPrice: " + price + "\nExpiry date: " + expiry_date;
+        return "Item name: " + getItemName() + "\nDate entered inventory: " + getInventoryDate() + "\nQuantity: " + getQuantity() + "\nPrice: " + getPrice() + "\nExpiry date: " + expiry_date;
     }
     public static void main (String args[]){
         new Cashier();

@@ -1,2 +1,3 @@
-Pizza			5		15.0		75.0
-								Total: RM75.0
+Bread			5		4.0		20.0
+Steak			2		55.9		111.8
+								Total: RM131.8

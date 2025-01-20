@@ -132,13 +132,4 @@ public class Receipt {
     int getReceiptNumber(){
         return receipt_number;
     }
-
-    void showWorking(){
-        for (int i = 0; i < item_name_list.size(); i++){
-            System.out.println(item_name_list.get(i));
-            System.out.println(item_quant_list.get(i));
-            System.out.println(item_price_list.get(i));
-            System.out.println(total_item_list.get(i));
-        }
-    }
 }

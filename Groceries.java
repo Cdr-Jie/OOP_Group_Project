@@ -7,16 +7,11 @@ import java.io.*;
 
 
 public class Groceries {
-    String item_name;
-    String inventory_date; // the day the item entered inventory
-    int quantity;
-    double price;
-    public static void main(String[] args) {
-        Groceries apple = new Groceries("apple",3,3.5);
-        apple.openEditorMenu();
-        System.out.println(apple);
-    }
-
+    private String item_name;
+    private String inventory_date; // the day the item entered inventory
+    private int quantity;
+    private double price;
+    
     Groceries(String item_name, int quantity, double price){
         this.item_name = item_name;
         this.quantity = quantity;
@@ -36,7 +31,7 @@ public class Groceries {
         final int X_LABEL = 130;
         final int X_FIELD = 220;
         DecimalFormat df = new DecimalFormat("#.##");
-        JDialog editorFrame = new JDialog(new JFrame(),"Edit item",true);
+        JDialog editorFrame = new JDialog(new JFrame("Edit item"), true);
         editorFrame.setLayout(null);
         editorFrame.setSize(500,400);
         editorFrame.setResizable(false);
@@ -65,7 +60,7 @@ public class Groceries {
         changeDateButton.setBounds(X_FIELD,210,120,20);
         changeDateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae){
-                changeInventoryDate();
+                changeInventoryDate(editorFrame);
                 invDateLabel.setText(inventory_date);
             }
         });
@@ -113,8 +108,8 @@ public class Groceries {
         }
     }
 
-    void changeInventoryDate(){
-        DateChanger inventoryDateChanger = new DateChanger(null,"Inventory");
+    void changeInventoryDate(JDialog parent){
+        DateChanger inventoryDateChanger = new DateChanger(parent,"Inventory");
         inventoryDateChanger.setVisible(true); // Show the dialog modally
         String selectedDate = inventoryDateChanger.getNewDate();
 

@@ -4,20 +4,20 @@ import java.awt.event.*;
 import java.text.DecimalFormat;
 
 public class DateChanger extends JDialog implements ActionListener{
-    String newDate;
-    JLabel dateLabel;
-    JPanel datePanel = new JPanel();
-    Integer days[] = new Integer[31];
-    final int big_month[] = {0,2,4,6,7,9,11};
-    final int small_month[] = {3,5,8,10,-1,-1};
-    Integer years[] = {2025, 2026, 2027, 2028, 2029, 2030};
-    JComboBox<Integer> yearsComboBox;
-    JComboBox<String> monthsComboBox;
-    JComboBox<Integer> daysComboBox = new JComboBox<>();
-    JButton setButton = new JButton("Set");
-    boolean dateSet = false;
+    private String newDate;
+    private JLabel dateLabel;
+    private JPanel datePanel = new JPanel();
+    private Integer days[] = new Integer[31];
+    private final int big_month[] = {0,2,4,6,7,9,11};
+    private final int small_month[] = {3,5,8,10,-1,-1};
+    private Integer years[] = {2025, 2026, 2027, 2028, 2029, 2030};
+    private JComboBox<Integer> yearsComboBox;
+    private JComboBox<String> monthsComboBox;
+    private JComboBox<Integer> daysComboBox = new JComboBox<>();
+    private JButton setButton = new JButton("Set");
+    private boolean dateSet = false;
 
-    DateChanger(Frame parent, String date_type) {
+    DateChanger(JDialog parent, String date_type) {
         super(parent, "Change " + date_type + " Date", true);
 
         dateLabel = new JLabel("Change " + date_type + " date");
@@ -104,7 +104,7 @@ public class DateChanger extends JDialog implements ActionListener{
         }
     }
 
-    boolean is_leap_year(){
+    private boolean is_leap_year(){
         if (years[yearsComboBox.getSelectedIndex()] % 4 == 0){
             return true;
         }

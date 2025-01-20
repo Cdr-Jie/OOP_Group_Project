@@ -137,7 +137,7 @@ public class Inventory_Menu extends JFrame implements ActionListener{
                 if (expiry_date.equals("-")){
                     Groceries item = new Groceries(name, quantity, price, inventory_date);
                     item.openEditorMenu();
-                    DecimalFormat df = new DecimalFormat("#.##");
+                    DecimalFormat df = new DecimalFormat("0.00");
                     fileWriter.write(item.getItemName() + "," + item.getInventoryDate() + "," + item.getQuantity() + "," + df.format(item.getPrice()) + "," + "-" + "\n");
                     String line;
                     while ((line = fileReader.readLine()) != null) {
@@ -155,7 +155,7 @@ public class Inventory_Menu extends JFrame implements ActionListener{
                     PerishableGoods item = new PerishableGoods(name, quantity, price);
                     /* call perishableGoods.editorMenu() */
                     item.openEditorMenu();
-                    DecimalFormat df = new DecimalFormat("#.##");
+                    DecimalFormat df = new DecimalFormat("0.00");
                     fileWriter.write(item.getItemName() + "," + item.getInventoryDate() + "," + item.getQuantity() + "," + df.format(item.getPrice()) + "," + item.getExpiryDate() + "\n");
                     String line;
                     while ((line = fileReader.readLine()) != null) {
