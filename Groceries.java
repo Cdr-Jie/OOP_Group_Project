@@ -31,7 +31,7 @@ public class Groceries {
         final int X_LABEL = 130;
         final int X_FIELD = 220;
         DecimalFormat df = new DecimalFormat("#.##");
-        JDialog editorFrame = new JDialog(new JFrame("Edit item"), true);
+        JDialog editorFrame = new JDialog(new JFrame(),"Edit item", true);
         editorFrame.setLayout(null);
         editorFrame.setSize(500,400);
         editorFrame.setResizable(false);

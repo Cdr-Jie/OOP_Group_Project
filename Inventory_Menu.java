@@ -83,7 +83,7 @@ public class Inventory_Menu extends JFrame implements ActionListener{
         consoleScrollPane.setBounds(10,450,1000,200);
 
         this.add(consoleScrollPane);
-
+        this.setTitle("Inventory Menu");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
 
